@@ -3,7 +3,7 @@ FROM nvidia/cuda:12.1.0-cudnn8-devel-ubuntu20.04
 
 LABEL maintainer="Your Name"
 
-# Set the DEBIAN_FRONTEND environment variable to suppress interactive prompts
+# Set the DEBIAN_FRONTEND environment variable
 ENV DEBIAN_FRONTEND=noninteractive
 
 # Update and install only necessary system dependencies
@@ -17,7 +17,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 RUN python3 -m pip install --no-cache-dir --upgrade pip
 
 # Install PyTorch and CUDA toolkit
-ARG PYTORCH_VERSION="2.0.1+cu121"
+ARG PYTORCH_VERSION="2.1.0+cu121"
 RUN python3 -m pip install --no-cache-dir torch==${PYTORCH_VERSION} torchvision torchaudio --index-url https://download.pytorch.org/whl/cu121
 
 # Install transformers and datasets
