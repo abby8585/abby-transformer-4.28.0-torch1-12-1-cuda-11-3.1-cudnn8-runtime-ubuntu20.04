@@ -3,14 +3,15 @@ FROM nvidia/cuda:12.1.0-cudnn8-devel-ubuntu20.04
 
 LABEL maintainer="Your Name"
 
-# Set the DEBIAN_FRONTEND environment variable
+# Set the DEBIAN_FRONTEND environment variable to suppress interactive prompts
 ENV DEBIAN_FRONTEND=noninteractive
 
-# Update and install only necessary system dependencies
+# Update and install necessary system dependencies
 RUN apt-get update && apt-get install -y --no-install-recommends \
     git \
     python3 \
     python3-pip \
+    python3-dev \
     && rm -rf /var/lib/apt/lists/*
 
 # Upgrade pip
