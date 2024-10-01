@@ -1,13 +1,21 @@
 # Use an optimized base image
 FROM pytorch/pytorch:2.1.0-cuda12.1-cudnn8-runtime
 
-LABEL maintainer="Your Name"
+LABEL maintainer="Abiola"
 
-# Install necessary system dependencies including python3-dev
+# Set the DEBIAN_FRONTEND environment variable to suppress interactive prompts
+ENV DEBIAN_FRONTEND=noninteractive
+
+# Install necessary system dependencies, including gcc and python3-dev
 RUN apt-get update && apt-get install -y --no-install-recommends \
     git \
     python3-dev \
+    gcc \
+    build-essential \
     && rm -rf /var/lib/apt/lists/*
+
+# Upgrade pip
+RUN python3 -m pip install --no-cache-dir --upgrade pip
 
 # Install Python packages
 RUN python3 -m pip install --no-cache-dir \
