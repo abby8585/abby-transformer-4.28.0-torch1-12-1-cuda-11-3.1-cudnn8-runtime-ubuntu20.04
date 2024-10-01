@@ -1,4 +1,4 @@
-# Use an optimized base image
+# Base PyTorch image with CUDA and cuDNN support
 FROM pytorch/pytorch:2.1.0-cuda12.1-cudnn8-runtime
 
 LABEL maintainer="Abiola"
@@ -6,7 +6,7 @@ LABEL maintainer="Abiola"
 # Set the DEBIAN_FRONTEND environment variable to suppress interactive prompts
 ENV DEBIAN_FRONTEND=noninteractive
 
-# Install necessary system dependencies, including gcc and python3-dev
+# Install necessary system dependencies, including git, gcc, and python3-dev
 RUN apt-get update && apt-get install -y --no-install-recommends \
     git \
     python3-dev \
@@ -14,10 +14,10 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     build-essential \
     && rm -rf /var/lib/apt/lists/*
 
-# Upgrade pip
+# Upgrade pip to the latest version
 RUN python3 -m pip install --no-cache-dir --upgrade pip
 
-# Install Python packages
+# Install Python packages required for model training
 RUN python3 -m pip install --no-cache-dir \
     transformers==4.31.0 \
     datasets \
@@ -26,15 +26,18 @@ RUN python3 -m pip install --no-cache-dir \
     pandas \
     boto3
 
-# Set the working directory
+# Set the working directory as per SageMaker standards
 WORKDIR /opt/ml/code
 
-# Set environment variables for SageMaker
+# Set environment variables for SageMaker to recognize the submission directory
 ENV SAGEMAKER_SUBMIT_DIRECTORY=/opt/ml/code
 
-# Ensure that the container recognizes GPUs
+# Set environment variables for GPU availability and driver capabilities
 ENV NVIDIA_VISIBLE_DEVICES=all
 ENV NVIDIA_DRIVER_CAPABILITIES=compute,utility
 
-# Set the entry point to use SageMaker training toolkit
-ENTRYPOINT ["python3", "-m", "sagemaker_training.train"]
+# Install the SageMaker PyTorch container training toolkit
+RUN python3 -m pip install --no-cache-dir sagemaker-pytorch-training
+
+# Ensure that the correct entry point for SageMaker PyTorch container is set
+ENTRYPOINT ["python3", "-m", "sagemaker_pytorch_container.training"]
