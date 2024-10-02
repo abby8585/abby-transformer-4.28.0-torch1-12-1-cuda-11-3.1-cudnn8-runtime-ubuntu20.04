@@ -1,25 +1,19 @@
-# Base PyTorch image with CUDA and cuDNN support
-FROM pytorch/pytorch:2.1.0-cuda12.1-cudnn8-runtime
+# Use the specified base image from AWS ECR
+FROM 763104351884.dkr.ecr.us-east-2.amazonaws.com/huggingface-pytorch-training:1.13.1-transformers4.26.0-gpu-py38-cu113-ubuntu20.04
 
 LABEL maintainer="Abiola"
 
 # Set the DEBIAN_FRONTEND environment variable to suppress interactive prompts
 ENV DEBIAN_FRONTEND=noninteractive
 
-# Install necessary system dependencies, including git, gcc, and python3-dev
-RUN apt-get update && apt-get install -y --no-install-recommends \
-    git \
-    python3-dev \
-    gcc \
-    build-essential \
-    && rm -rf /var/lib/apt/lists/*
-
 # Upgrade pip to the latest version
 RUN python3 -m pip install --no-cache-dir --upgrade pip
 
 # Install Python packages required for model training
+# Upgrade transformers and torch to be compatible with llama3.1
 RUN python3 -m pip install --no-cache-dir \
     transformers==4.31.0 \
+    torch==2.1.0 \
     datasets \
     sagemaker-training \
     numpy \
