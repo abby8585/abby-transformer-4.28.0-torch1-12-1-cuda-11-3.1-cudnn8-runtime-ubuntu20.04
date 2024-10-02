@@ -30,8 +30,5 @@ ENV SAGEMAKER_SUBMIT_DIRECTORY=/opt/ml/code
 ENV NVIDIA_VISIBLE_DEVICES=all
 ENV NVIDIA_DRIVER_CAPABILITIES=compute,utility
 
-# Install the SageMaker PyTorch container training toolkit
-RUN python3 -m pip install --no-cache-dir sagemaker-pytorch-training
-
 # Ensure that the correct entry point for SageMaker PyTorch container is set
 ENTRYPOINT ["python3", "-m", "sagemaker_pytorch_container.training"]
